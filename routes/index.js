@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+var cors = require("cors");
 
 /* GET home page. */
 var express = require("express");
@@ -13,5 +14,4 @@ router.post("/UserRegister", Insert_user);
 router.get("/", Show_all_data);
 
 module.exports = router;
-
-module.exports = router;
+app.use(cors());
