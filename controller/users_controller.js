@@ -11,14 +11,13 @@ exports.Show_all_data = async (req, res) => {
 
 exports.registerUser = async (req, res) => {
   try {
-    const { name, email, password, mobileNumber } = req.body;
-    const existingUser = await User.findOne({ email, mobileNumber });
+    const { name, password, mobileNumber } = req.body;
+    const existingUser = await User.findOne({ mobileNumber });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
     const user = await User.create({
       name,
-      email,
       password, // Storing plain text password (not recommended)
       mobileNumber,
     });
