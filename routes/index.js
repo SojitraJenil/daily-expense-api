@@ -9,7 +9,7 @@ const {
   Show_all_data,
 } = require("../controller/users_controller");
 
-router.post("/data_insert", Insert_user);
+router.post("/UserRegister", Insert_user);
 router.get("/", Show_all_data);
 
 module.exports = router;
