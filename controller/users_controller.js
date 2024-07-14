@@ -1,20 +1,64 @@
-var users = require("../model/users_model");
+const User = require("../model/users_model");
+const jwt = require("jsonwebtoken");
 
-// 1. Get all users API
 exports.Show_all_data = async (req, res) => {
-  var data = await users.find();
+  var data = await User.find();
   res.status(200).json({
     status: "data show successfully",
     data,
   });
 };
 
-exports.Insert_user = async (req, res) => {
-  var data = await users.create(req.body);
-  res.status(200).json({
-    status: "data insert successfully",
-    data,
-  });
+exports.registerUser = async (req, res) => {
+  try {
+    const { name, email, password, mobileNumber } = req.body;
+    const existingUser = await User.findOne({ email, mobileNumber });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+    const user = await User.create({
+      name,
+      email,
+      password, // Storing plain text password (not recommended)
+      mobileNumber,
+    });
+    const token = jwt.sign({ id: user._id }, "jenil", {
+      expiresIn: "360h",
+    });
+    res.status(201).json({
+      message: "User registered successfully",
+      user,
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  try {
+    const { mobileNumber, password } = req.body;
+
+    // Check if the user exists
+    const user = await User.findOne({ mobileNumber });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    if (password !== user.password) {
+      // Simple password check
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    const token = jwt.sign({ id: user._id }, "jenil", {
+      expiresIn: "360h",
+    });
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      token,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
 //  2. get single user api (ID)
