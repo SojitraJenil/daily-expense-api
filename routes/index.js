@@ -4,6 +4,7 @@ const {
   Show_all_data,
   loginUser,
   registerUser,
+  deleteUser,
 } = require("../controller/users_controller");
 const {
   showAllExpenses,
