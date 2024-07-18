@@ -15,6 +15,7 @@ const {
 router.post("/UserRegister", registerUser);
 router.post("/UserLogin", loginUser);
 router.get("/UserShow", Show_all_data);
+router.delete("/deleteUser/:id", deleteUser);
 
 router.get("/showAllExpenses", showAllExpenses);
 router.post("/createExpense", createExpense);
