@@ -20,6 +20,7 @@ const {
 // Public routes
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
+router.get("/user/profile/:id", userController.getUserProfile);
 
 // Forgot Password routes
 router.post("/password-reset-request", mail.requestPasswordReset);
