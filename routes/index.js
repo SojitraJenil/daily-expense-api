@@ -1,11 +1,8 @@
 var express = require("express");
 var router = express.Router();
-const {
-  Show_all_data,
-  loginUser,
-  registerUser,
-  deleteUser,
-} = require("../controller/users_controller");
+const userController = require("../controller/users_controller");
+const authMiddleware = require("../middleware/auth");
+
 const {
   showAllExpenses,
   createExpense,
@@ -19,10 +16,13 @@ const {
   Update_Fuel_Detail,
 } = require("../controller/fuel_controller");
 
-router.post("/UserRegister", registerUser);
-router.post("/UserLogin", loginUser);
-router.get("/UserShow", Show_all_data);
-router.delete("/deleteUser/:id", deleteUser);
+// Public routes
+router.post("/register", userController.registerUser);
+router.post("/login", userController.loginUser);
+
+// Protected routes
+router.get("/data", authMiddleware, userController.showAllData);
+router.delete("/user/:id", authMiddleware, userController.deleteUser);
 
 router.get("/showFuelDetails", Show_all_Fuel_Details);
 router.post("/addFuelDetails", Add_Fuel_Detail);
