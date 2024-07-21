@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const userController = require("../controller/users_controller");
 const authMiddleware = require("../middleware/auth");
+const mail = require("../controller/mail");
 
 const {
   showAllExpenses,
@@ -19,6 +20,10 @@ const {
 // Public routes
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
+
+// Forgot Password routes
+router.post("/password-reset-request", mail.requestPasswordReset);
+router.post("/reset-password", userController.resetPassword);
 
 // Protected routes
 router.get("/data", authMiddleware, userController.showAllData);
