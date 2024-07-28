@@ -56,9 +56,9 @@ exports.Add_Fuel_Detail = async (req, res) => {
       status: "Fuel detail added successfully",
       data: {
         fuelDetail: savedFuelDetail,
-        totalAmountSpent,
-        pricePerLiter,
-        currentAvg,
+        totalAmountSpent: totalAmountSpent,
+        pricePerLiter: pricePerLiter,
+        currentAvg: currentAvg,
       },
     });
   } catch (error) {
