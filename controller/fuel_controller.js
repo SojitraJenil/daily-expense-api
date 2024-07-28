@@ -17,21 +17,49 @@ exports.Show_all_Fuel_Details = async (req, res) => {
 };
 
 exports.Add_Fuel_Detail = async (req, res) => {
-  const { type, Currentkm, amount, mobileNumber, fuelVolume, fuelPrice } =
-    req.body;
+  const { Currentkm, amount, mobileNumber, fuelVolume, fuelPrice } = req.body;
 
   try {
-    // const average = (parseFloat(km) / parseFloat(fuelVolume)).toFixed(2);
+    // Calculate price per liter
+    const pricePerLiter = (parseFloat(amount) / parseFloat(fuelVolume)).toFixed(
+      2
+    );
+
+    // Calculate the current average fuel consumption
+    const currentAvg = (parseFloat(Currentkm) / parseFloat(fuelVolume)).toFixed(
+      2
+    );
+
+    // Find all fuel details for the given mobile number (bike)
+    const allFuelDetails = await Fuel.find({ mobileNumber });
+
+    // Calculate the total amount spent on fuel
+    const totalAmountSpent =
+      allFuelDetails.reduce(
+        (total, detail) => total + parseFloat(detail.amount),
+        0
+      ) + parseFloat(amount);
+
     const newFuelDetail = new Fuel({
       Currentkm,
       fuelPrice,
+      fuelVolume,
+      amount,
       mobileNumber,
+      pricePerLiter,
+      currentAvg,
     });
 
     const savedFuelDetail = await newFuelDetail.save();
+
     res.status(201).json({
       status: "Fuel detail added successfully",
-      data: savedFuelDetail,
+      data: {
+        fuelDetail: savedFuelDetail,
+        totalAmountSpent,
+        pricePerLiter,
+        currentAvg,
+      },
     });
   } catch (error) {
     res.status(400).json({
