@@ -13,6 +13,24 @@ exports.showAllExpenses = async (req, res) => {
   }
 };
 
+exports.showExpensesByMobileNumber = async (req, res) => {
+  try {
+    const { mobileNumber } = req.params; // or req.query depending on how you pass the mobile number
+    const data = await Expense.find({ mobileNumber }); // Filter by mobile number
+    if (data.length === 0) {
+      return res.status(404).json({
+        status: "No expenses found for this mobile number",
+      });
+    }
+    res.status(200).json({
+      status: "Expenses retrieved successfully",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 // Create a new expense
 exports.createExpense = async (req, res) => {
   try {
@@ -57,6 +75,42 @@ exports.updateExpense = async (req, res) => {
     res.status(200).json({
       status: "Expense updated successfully",
       updatedExpense,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+exports.searchExpenses = async (req, res) => {
+  try {
+    const { mobileNumber, searchTerm } = req.params;
+
+    const sanitizedSearchTerm = searchTerm.trim();
+    if (sanitizedSearchTerm === "") {
+      return res.status(400).json({
+        status: "Search term is required",
+      });
+    }
+    const filter = {
+      mobileNumber,
+      $or: [
+        { type: { $regex: sanitizedSearchTerm, $options: "i" } },
+        { desc: { $regex: sanitizedSearchTerm, $options: "i" } },
+        { amount: sanitizedSearchTerm }, // Exact match for amount
+      ],
+    };
+
+    const data = await Expense.find(filter);
+
+    if (data.length === 0) {
+      return res.status(404).json({
+        status: "No matching expenses found",
+      });
+    }
+
+    res.status(200).json({
+      status: "Expenses retrieved successfully",
+      data,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

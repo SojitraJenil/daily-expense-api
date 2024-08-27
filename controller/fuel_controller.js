@@ -16,6 +16,30 @@ exports.Show_all_Fuel_Details = async (req, res) => {
   }
 };
 
+exports.Show_Fuel_Details_By_MobileNumber = async (req, res) => {
+  try {
+    const { mobileNumber } = req.params; // or req.query depending on how you pass the mobile number
+    // Find fuel details by mobile number
+    const data = await Fuel.find({ mobileNumber });
+
+    if (data.length === 0) {
+      return res.status(404).json({
+        status: "No fuel details found for this mobile number",
+      });
+    }
+
+    res.status(200).json({
+      status: "Fuel details retrieved successfully",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
 exports.Add_Fuel_Detail = async (req, res) => {
   const { Currentkm, amount, mobileNumber, fuelVolume, fuelPrice } = req.body;
 

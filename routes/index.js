@@ -9,33 +9,37 @@ const {
   createExpense,
   deleteExpense,
   updateExpense,
+  searchExpenses,
+  showExpensesByMobileNumber,
 } = require("../controller/expense_controller");
 const {
   Show_all_Fuel_Details,
   Add_Fuel_Detail,
+  Show_Fuel_Details_By_MobileNumber,
   Delete_Fuel_Detail,
   Update_Fuel_Detail,
 } = require("../controller/fuel_controller");
 
-// Public routes
 router.post("/register", userController.registerUser);
 router.post("/login", userController.loginUser);
 router.get("/user/profile/:id", userController.getUserProfile);
 
-// Forgot Password routes
 router.post("/password-reset-request", mail.requestPasswordReset);
 router.post("/reset-password", userController.resetPassword);
 
-// Protected routes
 router.get("/data", authMiddleware, userController.showAllData);
 router.delete("/user/:id", authMiddleware, userController.deleteUser);
 
 router.get("/showFuelDetails", Show_all_Fuel_Details);
+router.get("/showFuelDetails/:mobileNumber", Show_Fuel_Details_By_MobileNumber);
 router.post("/addFuelDetails", Add_Fuel_Detail);
 router.put("/UpdateFuelDetail/:id", Update_Fuel_Detail);
 router.delete("/DeleteFuelDetail/:id", Delete_Fuel_Detail);
 
+router.get("/search/:mobileNumber/:searchTerm", searchExpenses);
+
 router.get("/showAllExpenses", showAllExpenses);
+router.get("/showAllExpenses/:mobileNumber", showExpensesByMobileNumber);
 router.post("/createExpense", createExpense);
 router.delete("/deleteExpense/:id", deleteExpense);
 router.put("/updateExpense/:id", updateExpense);
