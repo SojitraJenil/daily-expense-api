@@ -10,7 +10,7 @@ const ChatMessage = require("./model/chat_model");
 // Create Express app
 const app = express();
 const server = http.createServer(app);
-app.get("/messages", Index);
+app.get("/", Index);
 
 // Configure Socket.IO
 const io = new Server(server, {
