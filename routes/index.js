@@ -27,7 +27,6 @@ router.get("/user/profile/:id", userController.getUserProfile);
 router.post("/password-reset-request", mail.requestPasswordReset);
 router.post("/reset-password", userController.resetPassword);
 
-router.get("/data", authMiddleware, userController.showAllData);
 router.delete("/user/:id", authMiddleware, userController.deleteUser);
 
 router.get("/showFuelDetails", Show_all_Fuel_Details);
