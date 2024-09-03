@@ -3,17 +3,19 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const { Server } = require("socket.io");
 const http = require("http");
+const Index = require("./routes/index");
 
 const ChatMessage = require("./model/chat_model");
 
 // Create Express app
 const app = express();
 const server = http.createServer(app);
+app.get("/messages", Index);
 
 // Configure Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://expense-daily.vercel.app",
     methods: ["GET", "POST"],
   },
 });
