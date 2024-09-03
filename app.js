@@ -3,14 +3,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const { Server } = require("socket.io");
 const http = require("http");
-const Index = require("./routes/index");
+const Index = require("./routes/index"); // Import the routes
 
 const ChatMessage = require("./model/chat_model");
 
 // Create Express app
 const app = express();
 const server = http.createServer(app);
-app.get("/", Index);
 
 // Configure Socket.IO
 const io = new Server(server, {
@@ -29,6 +28,9 @@ mongoose
 // Express middleware
 app.use(cors());
 app.use(express.json());
+
+// Use routes
+app.use("/", Index); // Use the routes defined in index.js
 
 // Socket.IO event handlers
 io.on("connection", (socket) => {
